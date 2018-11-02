@@ -1,0 +1,51 @@
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.models import Sequential
+from keras.layers import Dense, Flatten, LSTM, Conv1D, MaxPooling1D, Dropout, Activation
+from keras.layers.embeddings import Embedding
+import nltk
+import string
+import numpy as np
+import pandas as pd
+from nltk.corpus import stopwords
+from sklearn.manifold import TSNE
+import plotly.offline as py
+import plotly.graph_objs as go
+
+py.init_notebook_mode(connected=True)
+embeddings_index = dict()
+f = open('glove.6B.100d.txt',encoding="utf8")
+for line in f:
+    values = line.split()
+    word = values[0]
+    coefs = np.asarray(values[1:], dtype='float32')
+    embeddings_index[word] = coefs
+f.close()
+
+def loadGloveModel(gloveFile):
+    print ("Loading Glove Model")
+    
+     
+    with open(gloveFile, encoding="utf8" ) as f:
+       content = f.readlines()
+    model = {}
+    for line in content:
+        splitLine = line.split()
+        word = splitLine[0]
+        embedding = np.array([float(val) for val in splitLine[1:]])
+        model[word] = embedding
+    print ("Done.",len(model)," words loaded!")
+    return model
+    
+file = "C:\\Users\\hgani\glove.6B.100d.txt"
+model = loadGloveModel(file)
+
+with open('TEST.txt', encoding="utf8" ) as t:
+    c = t.readlines()
+    for line in c:
+        words = line.split()
+        
+        print(words)
+for i in words:
+    
+    print("Word embedding for" + " " + (i) + " " + "is" + str(model[i]))
